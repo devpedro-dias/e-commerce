@@ -1,0 +1,34 @@
+server:
+  port: 8090
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKER:localhost:9092}
+    topic:
+      start-saga: start-saga
+      notify-ending: notify-ending
+    consumer:
+      group-id: auth-service-group
+      auto-offset-reset: earliest
+    producer:
+      retries-config: 3
+      acks-config: all
+
+  data:
+    mongodb:
+      database: auth-db
+      uri: ${MONGO_DB_URI:mongodb://admin:123456@auth-db:27017/auth-db?authSource=admin}
+    # uri: ${MONGO_DB_URI:mongodb://admin:123456@localhost:27017/admin?authSource=admin}
+
+    redis:
+      host: redis-db
+      port: 6379
+      password: ${REDIS_PASSWORD:my-strong-password}
+      jedis:
+        pool:
+          max-active: 10
+          max-wait: -1
+
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:secretkeyjwtutil}
+    expiration: 86400000
