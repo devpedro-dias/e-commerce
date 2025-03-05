@@ -1,14 +1,13 @@
 package dev.pedrodias.serviceauth.core.service;
 
 import dev.pedrodias.serviceauth.core.document.Event;
-import dev.pedrodias.serviceauth.core.document.SignUpEventPayload;
+import dev.pedrodias.serviceauth.core.document.User;
 import dev.pedrodias.serviceauth.core.dto.SignUpDto;
 import dev.pedrodias.serviceauth.core.utils.HashingUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +24,11 @@ public class SignUpService {
 
     private static final String TRANSACTION_ID_PATTERN = "%s_%s";
 
-    private HashingUtil hashingUtil;
-
     private KafkaTemplate<String, Event> kafkaTemplate;
 
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private HashingUtil hashingUtil;
 
     public void processSignUpAndPublishEvent(SignUpDto signUpDto) {
         try {
@@ -50,14 +49,15 @@ public class SignUpService {
         String encryptedEmail = hashingUtil.generateHash(signUpDto.getEmail(), emailSalt);
         String encryptedCpf = hashingUtil.generateHash(signUpDto.getCpf(), cpfSalt);
 
-        SignUpEventPayload payload = new SignUpEventPayload(
+        User payload = new User(
                 UUID.randomUUID().toString(),
                 signUpDto.getName(),
                 encryptedEmail,
                 encryptedCpf,
                 encryptedPassword,
                 signUpDto.getAddresses(),
-                signUpDto.getCellphone()
+                signUpDto.getCellphone(),
+                signUpDto.getRole()
         );
 
         return Event.builder()

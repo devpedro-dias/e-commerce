@@ -1,10 +1,13 @@
 package dev.pedrodias.serviceauth.core.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@Component
 public class HashingUtil {
 
     public String generateSalt() {

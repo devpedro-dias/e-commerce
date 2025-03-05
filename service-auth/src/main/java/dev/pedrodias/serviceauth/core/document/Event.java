@@ -1,6 +1,5 @@
 package dev.pedrodias.serviceauth.core.document;
 
-import dev.pedrodias.serviceauth.core.dto.SignUpDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +21,7 @@ public class Event {
     @Id
     private String id;
     private String transactionId;
-    private SignUpEventPayload payload;
+    private User payload;
     private String source;
     private String status;
     private List<History> eventHistory;

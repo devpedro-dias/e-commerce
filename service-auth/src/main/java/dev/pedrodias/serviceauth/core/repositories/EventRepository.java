@@ -1,4 +1,4 @@
-package dev.pedrodias.serviceauth.core.repository;
+package dev.pedrodias.serviceauth.core.repositories;
 
 import dev.pedrodias.serviceauth.core.document.Event;
 import org.springframework.data.mongodb.repository.MongoRepository;

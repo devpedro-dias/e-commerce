@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
-public class SignUpController {
+public class AuthenticationController {
 
     @Autowired
     private SignUpService signUpService;
 
 
-    @PostMapping
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@Validated @RequestBody SignUpDto signUpDto) {
         signUpService.processSignUpAndPublishEvent(signUpDto);

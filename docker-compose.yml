@@ -14,6 +14,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=my-strong-password
       - JWT_SECRET_KEY=secretkeyjwtutil
+      - JWT_EXPIRATION=2h
       - KAFKA_BROKER=kafka:9092
     depends_on:
       - auth-db
@@ -31,7 +32,7 @@ services:
 
   kafka:
     container_name: kafka
-    image: obsidiandynamics/kafka
+    image: apache/kafka:latest
     restart: "no"
     ports:
       - "2181:2181"
@@ -39,10 +40,16 @@ services:
     networks:
       - orchestrator-saga
     environment:
-      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
       KAFKA_RESTART_ATTEMPTS: "10"
       KAFKA_RESTART_DELAY: "5"
@@ -64,7 +71,7 @@ services:
       CONFIG_FILEPATH: /tmp/config.yml
       CONSOLE_CONFIG_FILE: |
         kafka:
-          brokers: ["kafka:29092"]
+          brokers: ["kafka:9092"]
     depends_on:
       - "kafka"
 
