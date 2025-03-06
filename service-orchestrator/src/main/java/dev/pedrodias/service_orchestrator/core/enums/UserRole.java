@@ -1,4 +1,4 @@
-package dev.pedrodias.serviceauth.core.document;
+package dev.pedrodias.service_orchestrator.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
