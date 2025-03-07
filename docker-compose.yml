@@ -29,6 +29,13 @@ services:
     restart: always
     networks:
       - orchestrator-saga
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    command: mongod --auth
+
 
   kafka:
     container_name: kafka

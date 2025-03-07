@@ -11,6 +11,7 @@
   <url>http://maven.apache.org</url>
   <modules>
     <module>service-auth</module>
+      <module>service-orchestrator</module>
   </modules>
 
   <properties>
